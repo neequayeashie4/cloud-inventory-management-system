@@ -1,0 +1,26 @@
+# Node Modules
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Environment Variables
+.env
+
+# Build Files
+dist/
+build/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# npm
+package-lock.json
+
+# Coverage
+coverage/
