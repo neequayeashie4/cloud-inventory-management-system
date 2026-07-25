@@ -1,4 +1,4 @@
-﻿# Cloud-Based Inventory Management System
+# Cloud-Based Inventory Management System
 
 **Course:** CSBC 252 - Introduction to Cloud Computing  
 **Project Type:** Cloud Computing Capstone Project  

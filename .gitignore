@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿# Dependencies
 node_modules/
 /.pnp
@@ -22,3 +23,31 @@ yarn-error.log*
 # System Files
 .DS_Store
 Thumbs.db
+=======
+# Node Modules
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Environment Variables
+.env
+
+# Build Files
+dist/
+build/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# npm
+package-lock.json
+
+# Coverage
+coverage/
+>>>>>>> c7656959d39d6f0b25c4ae8e38598fb07ca53748
