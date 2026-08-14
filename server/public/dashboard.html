@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Cloud Inventory</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar-mount"></aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Dashboard</h1>
+      </div>
+
+      <div id="stat-loading" class="spinner"></div>
+
+      <div id="stat-grid" class="stat-grid hidden">
+        <div class="stat-card">
+          <div class="label">Total Products</div>
+          <div class="value" id="stat-total-products">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Total Stock Value</div>
+          <div class="value" id="stat-total-value">-</div>
+        </div>
+        <div class="stat-card alert">
+          <div class="label">Low Stock Items</div>
+          <div class="value" id="stat-low-stock">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Movements Today</div>
+          <div class="value" id="stat-movements-today">-</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="page-header" style="margin-bottom: 12px;">
+            <h1 style="font-size: 16px;">Low Stock Products</h1>
+            <a href="/reports.html" class="btn btn-secondary btn-sm">View full report</a>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>SKU</th>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>Quantity</th>
+                  <th>Reorder Level</th>
+                </tr>
+              </thead>
+              <tbody id="low-stock-body"></tbody>
+            </table>
+          </div>
+          <div id="low-stock-empty" class="empty-state hidden">No low-stock products right now.</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

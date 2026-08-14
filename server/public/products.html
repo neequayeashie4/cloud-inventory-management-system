@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products — Cloud Inventory</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar-mount"></aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Products</h1>
+        <button class="btn btn-primary" id="add-btn">+ Add Product</button>
+      </div>
+
+      <div class="toolbar">
+        <input type="text" id="search-input" placeholder="Search by name or SKU..." />
+        <select id="category-filter">
+          <option value="">All categories</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>SKU</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Supplier</th>
+                  <th>Unit Price</th>
+                  <th>Quantity</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="products-body"></tbody>
+            </table>
+          </div>
+          <div id="empty-state" class="empty-state hidden">No products found.</div>
+          <div class="pagination">
+            <span id="pagination-info"></span>
+            <button class="btn btn-secondary btn-sm" id="prev-page">Prev</button>
+            <button class="btn btn-secondary btn-sm" id="next-page">Next</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">Add Product</h2>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="modal-error" class="alert alert-error hidden"></div>
+        <form id="product-form">
+          <input type="hidden" id="product-id" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="sku">SKU</label>
+              <input type="text" id="sku" required />
+            </div>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" rows="2"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="category_id">Category</label>
+              <select id="category_id"></select>
+            </div>
+            <div class="form-group">
+              <label for="supplier_id">Supplier</label>
+              <select id="supplier_id"></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="unit_price">Unit Price (GHS)</label>
+              <input type="number" id="unit_price" min="0" step="0.01" required />
+            </div>
+            <div class="form-group">
+              <label for="quantity">Quantity</label>
+              <input type="number" id="quantity" min="0" step="1" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="reorder_level">Reorder Level</label>
+            <input type="number" id="reorder_level" min="0" step="1" required />
+          </div>
+          <div class="form-group">
+            <label for="image">Product Image (JPEG/PNG/WebP, max 5MB)</label>
+            <input type="file" id="image" accept="image/jpeg,image/png,image/webp" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Save Product</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/products.js"></script>
+</body>
+</html>

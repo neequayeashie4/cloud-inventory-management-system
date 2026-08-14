@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+
+node_modules/
+logs/
+*.log
+
+*.pem
+*.key
+
+.DS_Store
+coverage/
