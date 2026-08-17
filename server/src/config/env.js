@@ -34,6 +34,7 @@ function loadEnv() {
     aws: {
       region: process.env.AWS_REGION,
       s3Bucket: process.env.S3_BUCKET,
+      s3UrlExpirySeconds: Number(process.env.S3_URL_EXPIRY) || 900,
     },
   };
 }

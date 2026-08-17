@@ -19,7 +19,18 @@ const app = express();
 
 app.set("trust proxy", 1); // behind nginx
 
-app.use(helmet());
+const s3Origin = `https://${env.aws.s3Bucket}.s3.${env.aws.region}.amazonaws.com`;
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "img-src": ["'self'", "data:", s3Origin],
+      },
+    },
+  })
+);
 app.use(cors()); // same-origin in production; harmless to leave enabled
 app.use(compression());
 app.use(express.json());

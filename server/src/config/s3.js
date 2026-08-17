@@ -10,7 +10,6 @@ const env = require("./env");
 const s3 = new S3Client({ region: env.aws.region });
 
 const PRODUCT_PREFIX = "products/";
-const SIGNED_URL_EXPIRY_SECONDS = 300;
 
 async function uploadObject(file) {
   const key = `${PRODUCT_PREFIX}${crypto.randomUUID()}${path.extname(file.originalname)}`;
@@ -44,7 +43,7 @@ async function getObjectSignedUrl(key) {
     Bucket: env.aws.s3Bucket,
     Key: key,
   });
-  return getSignedUrl(s3, command, { expiresIn: SIGNED_URL_EXPIRY_SECONDS });
+  return getSignedUrl(s3, command, { expiresIn: env.aws.s3UrlExpirySeconds });
 }
 
 module.exports = { uploadObject, deleteObject, getObjectSignedUrl };
