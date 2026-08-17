@@ -6,47 +6,58 @@
   <title>Products — Cloud Inventory</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body>
+<body class="page-products">
   <div class="app-shell">
     <aside class="sidebar" id="sidebar-mount"></aside>
 
     <main class="main-content">
       <div class="page-header">
         <h1>Products</h1>
-        <button class="btn btn-primary" id="add-btn">+ Add Product</button>
+        <button class="btn btn-primary" id="add-btn" type="button">+ Add Product</button>
       </div>
 
-      <div class="toolbar">
-        <input type="text" id="search-input" placeholder="Search by name or SKU..." />
-        <select id="category-filter">
-          <option value="">All categories</option>
-        </select>
+      <div class="toolbar" aria-label="Product filters">
+        <div class="toolbar-field">
+          <label class="sr-only" for="search-input">Search products</label>
+          <input type="text" id="search-input" placeholder="Search by name or SKU..." aria-label="Search products" />
+        </div>
+        <div class="toolbar-field">
+          <label class="sr-only" for="category-filter">Filter products by category</label>
+          <select id="category-filter" aria-label="Filter products by category">
+            <option value="">All categories</option>
+          </select>
+        </div>
       </div>
 
-      <div class="card">
+      <div id="table-error" class="table-alert hidden" role="alert">
+        <span id="table-error-message"></span>
+        <button type="button" class="btn btn-secondary btn-sm" id="retry-products">Retry</button>
+      </div>
+
+      <div class="card product-card">
         <div class="card-body">
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th></th>
-                  <th>SKU</th>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Supplier</th>
-                  <th>Unit Price</th>
-                  <th>Quantity</th>
-                  <th></th>
+                  <th scope="col" class="image-col">Image</th>
+                  <th scope="col">SKU</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Supplier</th>
+                  <th scope="col" class="numeric-col">Unit Price</th>
+                  <th scope="col" class="numeric-col">Quantity</th>
+                  <th scope="col" class="actions-col">Actions</th>
                 </tr>
               </thead>
               <tbody id="products-body"></tbody>
             </table>
           </div>
-          <div id="empty-state" class="empty-state hidden">No products found.</div>
+          <div id="empty-state" class="empty-state hidden" aria-live="polite"></div>
           <div class="pagination">
             <span id="pagination-info"></span>
-            <button class="btn btn-secondary btn-sm" id="prev-page">Prev</button>
-            <button class="btn btn-secondary btn-sm" id="next-page">Next</button>
+            <button class="btn btn-secondary btn-sm" id="prev-page" type="button">Prev</button>
+            <button class="btn btn-secondary btn-sm" id="next-page" type="button">Next</button>
           </div>
         </div>
       </div>
@@ -57,55 +68,64 @@
     <div class="modal">
       <div class="modal-header">
         <h2 id="modal-title">Add Product</h2>
-        <button class="modal-close" id="modal-close">&times;</button>
+        <button class="modal-close" id="modal-close" type="button" aria-label="Close product form">&times;</button>
       </div>
       <div class="modal-body">
         <div id="modal-error" class="alert alert-error hidden"></div>
-        <form id="product-form">
+        <form id="product-form" novalidate>
           <input type="hidden" id="product-id" />
           <div class="form-row">
             <div class="form-group">
               <label for="sku">SKU</label>
-              <input type="text" id="sku" required />
+              <input type="text" id="sku" required aria-describedby="sku-error" />
+              <div class="field-message" id="sku-error" aria-live="polite"></div>
             </div>
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" id="name" required />
+              <input type="text" id="name" required aria-describedby="name-error" />
+              <div class="field-message" id="name-error" aria-live="polite"></div>
             </div>
           </div>
           <div class="form-group">
             <label for="description">Description</label>
-            <textarea id="description" rows="2"></textarea>
+            <textarea id="description" rows="2" aria-describedby="description-error"></textarea>
+            <div class="field-message" id="description-error" aria-live="polite"></div>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label for="category_id">Category</label>
-              <select id="category_id"></select>
+              <select id="category_id" aria-describedby="category_id-error"></select>
+              <div class="field-message" id="category_id-error" aria-live="polite"></div>
             </div>
             <div class="form-group">
               <label for="supplier_id">Supplier</label>
-              <select id="supplier_id"></select>
+              <select id="supplier_id" aria-describedby="supplier_id-error"></select>
+              <div class="field-message" id="supplier_id-error" aria-live="polite"></div>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label for="unit_price">Unit Price (GHS)</label>
-              <input type="number" id="unit_price" min="0" step="0.01" required />
+              <input type="number" id="unit_price" min="0" step="0.01" required aria-describedby="unit_price-error" />
+              <div class="field-message" id="unit_price-error" aria-live="polite"></div>
             </div>
             <div class="form-group">
               <label for="quantity">Quantity</label>
-              <input type="number" id="quantity" min="0" step="1" required />
+              <input type="number" id="quantity" min="0" step="1" required aria-describedby="quantity-error" />
+              <div class="field-message" id="quantity-error" aria-live="polite"></div>
             </div>
           </div>
           <div class="form-group">
             <label for="reorder_level">Reorder Level</label>
-            <input type="number" id="reorder_level" min="0" step="1" required />
+            <input type="number" id="reorder_level" min="0" step="1" required aria-describedby="reorder_level-error" />
+            <div class="field-message" id="reorder_level-error" aria-live="polite"></div>
           </div>
           <div class="form-group">
             <label for="image">Product Image (JPEG/PNG/WebP, max 5MB)</label>
-            <input type="file" id="image" accept="image/jpeg,image/png,image/webp" />
+            <input type="file" id="image" accept="image/jpeg,image/png,image/webp" aria-describedby="image-error" />
+            <div class="field-message" id="image-error" aria-live="polite"></div>
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Save Product</button>
+          <button type="submit" class="btn btn-primary btn-block" id="submit-product-btn">Save Product</button>
         </form>
       </div>
     </div>
