@@ -2,8 +2,13 @@ document.addEventListener("DOMContentLoaded", () => {
   initLayout("stock");
   const user = getStoredUser();
 
+  if (!user) {
+    location.href = "/index.html";
+    return;
+  }
+
   const formCard = document.getElementById("movement-form-card");
-  if (!canEdit(user.role)) formCard.classList.add("hidden");
+  if (formCard && !canEdit(user.role)) formCard.classList.add("hidden");
 
   const productSelect = document.getElementById("product_id");
   const form = document.getElementById("movement-form");

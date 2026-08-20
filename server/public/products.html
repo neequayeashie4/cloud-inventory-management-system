@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Products — Cloud Inventory</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body class="page-products">
@@ -11,53 +13,62 @@
     <aside class="sidebar" id="sidebar-mount"></aside>
 
     <main class="main-content">
-      <div class="page-header">
-        <h1>Products</h1>
-        <button class="btn btn-primary" id="add-btn" type="button">+ Add Product</button>
-      </div>
-
-      <div class="toolbar" aria-label="Product filters">
-        <div class="toolbar-field">
-          <label class="sr-only" for="search-input">Search products</label>
-          <input type="text" id="search-input" placeholder="Search by name or SKU..." aria-label="Search products" />
-        </div>
-        <div class="toolbar-field">
-          <label class="sr-only" for="category-filter">Filter products by category</label>
-          <select id="category-filter" aria-label="Filter products by category">
-            <option value="">All categories</option>
-          </select>
-        </div>
-      </div>
-
-      <div id="table-error" class="table-alert hidden" role="alert">
-        <span id="table-error-message"></span>
-        <button type="button" class="btn btn-secondary btn-sm" id="retry-products">Retry</button>
-      </div>
-
-      <div class="card product-card">
-        <div class="card-body">
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col" class="image-col">Image</th>
-                  <th scope="col">SKU</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Category</th>
-                  <th scope="col">Supplier</th>
-                  <th scope="col" class="numeric-col">Unit Price</th>
-                  <th scope="col" class="numeric-col">Quantity</th>
-                  <th scope="col" class="actions-col">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="products-body"></tbody>
-            </table>
+      <div class="page-shell">
+        <div class="page-header">
+          <div>
+            <p class="eyebrow">Catalog</p>
+            <h1>Products</h1>
           </div>
-          <div id="empty-state" class="empty-state hidden" aria-live="polite"></div>
-          <div class="pagination">
-            <span id="pagination-info"></span>
-            <button class="btn btn-secondary btn-sm" id="prev-page" type="button">Prev</button>
-            <button class="btn btn-secondary btn-sm" id="next-page" type="button">Next</button>
+          <button class="btn btn-primary" id="add-btn" type="button">+ Add Product</button>
+        </div>
+
+        <div class="card toolbar-panel">
+          <div class="card-body">
+            <div class="toolbar" aria-label="Product filters">
+              <div class="toolbar-field toolbar-search">
+                <label class="sr-only" for="search-input">Search products</label>
+                <input type="text" id="search-input" placeholder="Search by name or SKU..." aria-label="Search products" />
+              </div>
+              <div class="toolbar-field">
+                <label class="sr-only" for="category-filter">Filter products by category</label>
+                <select id="category-filter" aria-label="Filter products by category">
+                  <option value="">All categories</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="table-error" class="table-alert hidden" role="alert">
+          <span id="table-error-message"></span>
+          <button type="button" class="btn btn-secondary btn-sm" id="retry-products">Retry</button>
+        </div>
+
+        <div class="card product-card">
+          <div class="card-body">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col" class="image-col">Image</th>
+                    <th scope="col">SKU</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Supplier</th>
+                    <th scope="col" class="numeric-col">Unit Price</th>
+                    <th scope="col" class="numeric-col">Quantity</th>
+                    <th scope="col" class="actions-col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="products-body"></tbody>
+              </table>
+            </div>
+            <div id="empty-state" class="empty-state hidden" aria-live="polite"></div>
+            <div class="pagination">
+              <span id="pagination-info"></span>
+              <button class="btn btn-secondary btn-sm" id="prev-page" type="button">Prev</button>
+              <button class="btn btn-secondary btn-sm" id="next-page" type="button">Next</button>
+            </div>
           </div>
         </div>
       </div>

@@ -2,6 +2,11 @@ document.addEventListener("DOMContentLoaded", () => {
   initLayout("products");
   const user = getStoredUser();
 
+  if (!user) {
+    location.href = "/index.html";
+    return;
+  }
+
   const tbody = document.getElementById("products-body");
   const emptyState = document.getElementById("empty-state");
   const tableError = document.getElementById("table-error");

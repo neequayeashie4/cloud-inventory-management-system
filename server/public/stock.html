@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stock — Cloud Inventory</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -11,71 +13,94 @@
     <aside class="sidebar" id="sidebar-mount"></aside>
 
     <main class="main-content">
-      <div class="page-header">
-        <h1>Stock Movements</h1>
-      </div>
-
-      <div class="card" id="movement-form-card">
-        <div class="card-body">
-          <div id="form-error" class="alert alert-error hidden"></div>
-          <form id="movement-form">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="product_id">Product</label>
-                <select id="product_id" required></select>
-              </div>
-              <div class="form-group">
-                <label for="type">Movement Type</label>
-                <select id="type" required>
-                  <option value="IN">Stock In</option>
-                  <option value="OUT">Stock Out</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="quantity">Quantity</label>
-                <input type="number" id="quantity" min="1" step="1" required />
-              </div>
-              <div class="form-group">
-                <label for="reference">Reference (PO/SO number)</label>
-                <input type="text" id="reference" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="note">Note</label>
-              <textarea id="note" rows="2"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Record Movement</button>
-          </form>
-        </div>
-      </div>
-
-      <div class="toolbar">
-        <input type="date" id="from-date" />
-        <input type="date" id="to-date" />
-        <button class="btn btn-secondary" id="filter-btn">Filter</button>
-        <button class="btn btn-secondary" id="clear-filter-btn">Clear</button>
-      </div>
-
-      <div class="card">
-        <div class="card-body">
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Product</th>
-                  <th>Type</th>
-                  <th>Quantity</th>
-                  <th>Reference</th>
-                  <th>Recorded By</th>
-                </tr>
-              </thead>
-              <tbody id="movements-body"></tbody>
-            </table>
+      <div class="page-shell">
+        <div class="page-header">
+          <div>
+            <p class="eyebrow">Inventory</p>
+            <h1>Stock Movements</h1>
           </div>
-          <div id="empty-state" class="empty-state hidden">No stock movements found.</div>
+        </div>
+
+        <div class="card" id="movement-form-card">
+          <div class="card-body">
+            <div class="section-header">
+              <h2>Record movement</h2>
+            </div>
+            <div id="form-error" class="alert alert-error hidden"></div>
+            <form id="movement-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="product_id">Product</label>
+                  <select id="product_id" required></select>
+                </div>
+                <div class="form-group">
+                  <label for="type">Movement Type</label>
+                  <select id="type" required>
+                    <option value="IN">Stock In</option>
+                    <option value="OUT">Stock Out</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="quantity">Quantity</label>
+                  <input type="number" id="quantity" min="1" step="1" required />
+                </div>
+                <div class="form-group">
+                  <label for="reference">Reference (PO/SO number)</label>
+                  <input type="text" id="reference" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="note">Note</label>
+                <textarea id="note" rows="2"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Record Movement</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="card toolbar-panel">
+          <div class="card-body">
+            <div class="toolbar" aria-label="Movement filters">
+              <div class="toolbar-field">
+                <label class="sr-only" for="from-date">From date</label>
+                <input type="date" id="from-date" />
+              </div>
+              <div class="toolbar-field">
+                <label class="sr-only" for="to-date">To date</label>
+                <input type="date" id="to-date" />
+              </div>
+              <div class="toolbar-actions">
+                <button class="btn btn-secondary" id="filter-btn" type="button">Filter</button>
+                <button class="btn btn-secondary" id="clear-filter-btn" type="button">Clear</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="section-header">
+              <h2>Movement history</h2>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Product</th>
+                    <th>Type</th>
+                    <th>Quantity</th>
+                    <th>Reference</th>
+                    <th>Recorded By</th>
+                  </tr>
+                </thead>
+                <tbody id="movements-body"></tbody>
+              </table>
+            </div>
+            <div id="empty-state" class="empty-state hidden">No stock movements found.</div>
+          </div>
         </div>
       </div>
     </main>

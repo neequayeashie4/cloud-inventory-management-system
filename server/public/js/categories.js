@@ -2,6 +2,11 @@ document.addEventListener("DOMContentLoaded", () => {
   initLayout("categories");
   const user = getStoredUser();
 
+  if (!user) {
+    location.href = "/index.html";
+    return;
+  }
+
   const tbody = document.getElementById("categories-body");
   const emptyState = document.getElementById("empty-state");
   const backdrop = document.getElementById("modal-backdrop");
@@ -10,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalTitle = document.getElementById("modal-title");
   const addBtn = document.getElementById("add-btn");
 
-  if (!canEdit(user.role)) addBtn.classList.add("hidden");
+  if (addBtn && !canEdit(user.role)) addBtn.classList.add("hidden");
 
   function openModal(category) {
     modalError.classList.add("hidden");
@@ -56,12 +61,12 @@ document.addEventListener("DOMContentLoaded", () => {
       .map(
         (c) => `
       <tr data-id="${c.id}">
-        <td>${escapeHtml(c.name)}</td>
+        <td class="cell-name">${escapeHtml(c.name)}</td>
         <td>${escapeHtml(c.description || "-")}</td>
         <td>${formatDate(c.created_at)}</td>
         <td class="actions-cell">
-          ${canWrite ? `<button class="btn btn-secondary btn-sm edit-btn">Edit</button>` : ""}
-          ${canRemove ? `<button class="btn btn-danger btn-sm delete-btn">Delete</button>` : ""}
+          ${canWrite ? `<button class="btn btn-secondary btn-sm edit-btn" type="button">Edit</button>` : ""}
+          ${canRemove ? `<button class="btn btn-danger btn-sm delete-btn" type="button">Delete</button>` : ""}
         </td>
       </tr>`
       )

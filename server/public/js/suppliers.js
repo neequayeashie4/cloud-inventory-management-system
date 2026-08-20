@@ -2,6 +2,11 @@ document.addEventListener("DOMContentLoaded", () => {
   initLayout("suppliers");
   const user = getStoredUser();
 
+  if (!user) {
+    location.href = "/index.html";
+    return;
+  }
+
   const tbody = document.getElementById("suppliers-body");
   const emptyState = document.getElementById("empty-state");
   const backdrop = document.getElementById("modal-backdrop");
@@ -11,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const addBtn = document.getElementById("add-btn");
 
   // Suppliers can be created/edited by admin+staff, but only admin deletes.
-  if (!canEdit(user.role)) addBtn.classList.add("hidden");
+  if (addBtn && !canEdit(user.role)) addBtn.classList.add("hidden");
 
   function openModal(supplier) {
     modalError.classList.add("hidden");
@@ -60,13 +65,13 @@ document.addEventListener("DOMContentLoaded", () => {
       .map(
         (s) => `
       <tr data-id="${s.id}">
-        <td>${escapeHtml(s.name)}</td>
+        <td class="cell-name">${escapeHtml(s.name)}</td>
         <td>${escapeHtml(s.contact_person || "-")}</td>
         <td>${escapeHtml(s.email || "-")}</td>
         <td>${escapeHtml(s.phone || "-")}</td>
         <td class="actions-cell">
-          ${canWrite ? `<button class="btn btn-secondary btn-sm edit-btn">Edit</button>` : ""}
-          ${canRemove ? `<button class="btn btn-danger btn-sm delete-btn">Delete</button>` : ""}
+          ${canWrite ? `<button class="btn btn-secondary btn-sm edit-btn" type="button">Edit</button>` : ""}
+          ${canRemove ? `<button class="btn btn-danger btn-sm delete-btn" type="button">Delete</button>` : ""}
         </td>
       </tr>`
       )
