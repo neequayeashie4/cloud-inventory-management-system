@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: "/suppliers.html", label: "Suppliers", page: "suppliers" },
   { href: "/stock.html", label: "Stock", page: "stock" },
   { href: "/reports.html", label: "Reports", page: "reports" },
+  { href: "/users.html", label: "Users", page: "users", adminOnly: true },
 ];
 
 function canEdit(role) {
@@ -25,18 +26,20 @@ function initLayout(activePage) {
   const mount = document.getElementById("sidebar-mount");
   if (!mount || !user) return;
 
-  const navHtml = NAV_ITEMS.map((item) => {
-    const isActive = item.page === activePage;
-    return `
-      <a
-        href="${item.href}"
-        class="sidebar-nav-item${isActive ? " active" : ""}"
-        ${isActive ? 'aria-current="page"' : ""}
-      >
-        ${item.label}
-      </a>
-    `;
-  }).join("");
+  const navHtml = NAV_ITEMS.filter((item) => !item.adminOnly || user.role === "admin")
+    .map((item) => {
+      const isActive = item.page === activePage;
+      return `
+        <a
+          href="${item.href}"
+          class="sidebar-nav-item${isActive ? " active" : ""}"
+          ${isActive ? 'aria-current="page"' : ""}
+        >
+          ${item.label}
+        </a>
+      `;
+    })
+    .join("");
 
   mount.innerHTML = `
     <div class="brand-wrap">
@@ -109,6 +112,4 @@ function initLayout(activePage) {
       main.prepend(topbar);
     }
   }
-
-  document.body.classList.toggle("role-viewer", user.role === "viewer");
 }

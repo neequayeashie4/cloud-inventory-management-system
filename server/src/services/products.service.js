@@ -97,13 +97,13 @@ async function create(data, file) {
 }
 
 async function update(id, data, file) {
-  const existing = await pool.query("SELECT image_key FROM products WHERE id = ?", [id]);
+  const existing = await pool.query("SELECT image_key, quantity FROM products WHERE id = ?", [id]);
   const current = existing[0][0];
   if (!current) {
     throw new AppError("Product not found", 404, "NOT_FOUND");
   }
 
-  const { sku, name, description, category_id, supplier_id, unit_price, quantity, reorder_level } = data;
+  const { sku, name, description, category_id, supplier_id, unit_price, reorder_level } = data;
 
   let imageKey = current.image_key;
   if (file) {
@@ -115,10 +115,14 @@ async function update(id, data, file) {
     }
   }
 
+  // Quantity is deliberately excluded from this write — it may only change
+  // through /stock/in and /stock/out, which lock the row and record a
+  // stock_movements entry. Accepting it here would let it be overwritten
+  // with no audit trail and no protection against a concurrent stock movement.
   await pool.query(
     `UPDATE products SET
       sku = ?, name = ?, description = ?, category_id = ?, supplier_id = ?,
-      unit_price = ?, quantity = ?, reorder_level = ?, image_key = ?
+      unit_price = ?, reorder_level = ?, image_key = ?
      WHERE id = ?`,
     [
       sku,
@@ -127,7 +131,6 @@ async function update(id, data, file) {
       category_id || null,
       supplier_id || null,
       unit_price || 0,
-      quantity || 0,
       reorder_level || 10,
       imageKey,
       id,

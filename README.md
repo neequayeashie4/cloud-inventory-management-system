@@ -6,7 +6,7 @@ CSBC 252 Capstone — Express + MySQL + S3 inventory system with role-based acce
 
 - **Backend:** Node.js, Express, MySQL (via `mysql2`), JWT auth, AWS SDK v3 (S3)
 - **Frontend:** Plain HTML/CSS/JS, served as static files from `server/public/` — same origin as the API, no CORS
-- **Infra:** EC2 (Ubuntu, nginx + pm2), RDS MySQL (private subnet), S3 (private bucket, pre-signed URLs), IAM instance role, CloudWatch
+- **Infra:** EC2 (Ubuntu, nginx + pm2), RDS MySQL (private subnet), S3 (private bucket, pre-signed URLs), IAM instance role, CloudWatch — all in **`eu-north-1`**. Every AWS resource must be created in this region.
 
 ## Demo accounts
 
@@ -83,7 +83,7 @@ Full diagram: `docs/aws-architecture.png`. ERD: `docs/erd.png`. API contract: `d
 - Passwords hashed with bcrypt (cost factor 12)
 - JWT, 8h expiry, verified on every protected route
 - Parameterised queries everywhere — no string-concatenated SQL
-- S3 bucket has Block Public Access ON; the app only ever hands out short-lived (300s) pre-signed URLs
+- S3 bucket has Block Public Access ON; the app only ever hands out short-lived (900s, via `S3_URL_EXPIRY`) pre-signed URLs
 - EC2 uses an IAM instance role scoped to `s3:PutObject`/`GetObject`/`DeleteObject` on one bucket prefix — no long-lived AWS keys on the server
 - RDS is not publicly accessible; only the web security group can reach port 3306
 - Centralised error handler never returns stack traces to the client

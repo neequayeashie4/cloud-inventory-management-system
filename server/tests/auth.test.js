@@ -1,10 +1,16 @@
 const request = require("supertest");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 jest.mock("../src/config/db");
 
 const pool = require("../src/config/db");
+const env = require("../src/config/env");
 const app = require("../src/app");
+
+function tokenFor(role, id = 1) {
+  return jwt.sign({ sub: id, role, email: `${role}@demo.com` }, env.jwtSecret, { expiresIn: "1h" });
+}
 
 describe("POST /api/auth/register", () => {
   beforeEach(() => {
@@ -95,5 +101,47 @@ describe("GET /api/auth/me", () => {
     const res = await request(app).get("/api/auth/me");
     expect(res.status).toBe(401);
     expect(res.body.error.code).toBe("UNAUTHENTICATED");
+  });
+});
+
+describe("POST /api/auth/users", () => {
+  beforeEach(() => {
+    pool.query.mockReset();
+  });
+
+  it("rejects a non-admin role with 403, regardless of the UI", async () => {
+    const res = await request(app)
+      .post("/api/auth/users")
+      .set("Authorization", `Bearer ${tokenFor("staff")}`)
+      .send({ name: "New Staffer", email: "staffer@example.com", password: "password123", role: "staff" });
+
+    expect(res.status).toBe(403);
+    expect(res.body.error.code).toBe("FORBIDDEN");
+    expect(pool.query).not.toHaveBeenCalled();
+  });
+
+  it("rejects an invalid role value with 400", async () => {
+    const res = await request(app)
+      .post("/api/auth/users")
+      .set("Authorization", `Bearer ${tokenFor("admin")}`)
+      .send({ name: "New Staffer", email: "staffer@example.com", password: "password123", role: "superuser" });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe("VALIDATION_ERROR");
+  });
+
+  it("lets an admin create a staff account and never returns its token", async () => {
+    pool.query
+      .mockResolvedValueOnce([[]]) // no existing user with this email
+      .mockResolvedValueOnce([{ insertId: 99 }]); // insert result
+
+    const res = await request(app)
+      .post("/api/auth/users")
+      .set("Authorization", `Bearer ${tokenFor("admin")}`)
+      .send({ name: "New Staffer", email: "staffer@example.com", password: "password123", role: "staff" });
+
+    expect(res.status).toBe(201);
+    expect(res.body.data.user).toMatchObject({ id: 99, role: "staff", email: "staffer@example.com" });
+    expect(res.body.data.token).toBeUndefined();
   });
 });

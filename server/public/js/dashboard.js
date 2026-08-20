@@ -1,71 +1,92 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   initLayout("dashboard");
 
-  try {
-    const [summary, lowStock, movements] = await Promise.all([
-      api.get("/reports/summary"),
-      api.get("/reports/low-stock"),
-      api.get("/stock/movements?limit=5"),
-    ]);
+  const statLoading = document.getElementById("stat-loading");
+  const statGrid = document.getElementById("stat-grid");
+  const dashboardError = document.getElementById("dashboard-error");
+  const dashboardErrorMessage = document.getElementById("dashboard-error-message");
+  const retryBtn = document.getElementById("retry-dashboard");
 
-    document.getElementById("stat-total-products").textContent = Number(summary.totalProducts).toLocaleString();
-    document.getElementById("stat-total-value").textContent = formatCurrency(summary.totalStockValue);
-    document.getElementById("stat-low-stock").textContent = Number(summary.lowStockCount).toLocaleString();
-    document.getElementById("stat-movements-today").textContent = Number(summary.movementsToday).toLocaleString();
+  async function loadDashboard() {
+    statGrid.classList.add("hidden");
+    dashboardError.classList.add("hidden");
+    statLoading.classList.remove("hidden");
+    statLoading.setAttribute("aria-busy", "true");
 
-    document.getElementById("stat-loading").classList.add("hidden");
-    document.getElementById("stat-grid").classList.remove("hidden");
+    try {
+      const [summary, lowStock, movements] = await Promise.all([
+        api.get("/reports/summary"),
+        api.get("/reports/low-stock"),
+        api.get("/stock/movements?limit=5"),
+      ]);
 
-    const tbody = document.getElementById("low-stock-body");
-    const lowStockEmpty = document.getElementById("low-stock-empty");
-    if (!Array.isArray(lowStock) || lowStock.length === 0) {
-      lowStockEmpty.classList.remove("hidden");
-    } else {
-      tbody.innerHTML = lowStock
-        .slice(0, 5)
-        .map(
-          (p) => `
-        <tr>
-          <td>${escapeHtml(p.sku)}</td>
-          <td class="cell-name">${escapeHtml(p.name)}</td>
-          <td>${escapeHtml(p.category_name || "-")}</td>
-          <td><span class="badge badge-low">${Number(p.quantity).toLocaleString()}</span></td>
-          <td>${Number(p.reorder_level).toLocaleString()}</td>
-        </tr>`
-        )
-        .join("");
+      document.getElementById("stat-total-products").textContent = Number(summary.totalProducts).toLocaleString();
+      document.getElementById("stat-total-value").textContent = formatCurrency(summary.totalStockValue);
+      document.getElementById("stat-low-stock").textContent = Number(summary.lowStockCount).toLocaleString();
+      document.getElementById("stat-movements-today").textContent = Number(summary.movementsToday).toLocaleString();
+
+      statLoading.classList.add("hidden");
+      statLoading.setAttribute("aria-busy", "false");
+      statGrid.classList.remove("hidden");
+
+      const tbody = document.getElementById("low-stock-body");
+      const lowStockEmpty = document.getElementById("low-stock-empty");
+      if (!Array.isArray(lowStock) || lowStock.length === 0) {
+        tbody.innerHTML = "";
+        lowStockEmpty.classList.remove("hidden");
+      } else {
+        lowStockEmpty.classList.add("hidden");
+        tbody.innerHTML = lowStock
+          .slice(0, 5)
+          .map(
+            (p) => `
+          <tr>
+            <td data-label="SKU">${escapeHtml(p.sku)}</td>
+            <td data-label="Product" class="cell-name">${escapeHtml(p.name)}</td>
+            <td data-label="Category">${escapeHtml(p.category_name || "-")}</td>
+            <td data-label="Quantity" class="numeric-col"><span class="badge badge-low">${Number(p.quantity).toLocaleString()}</span></td>
+            <td data-label="Reorder Level" class="numeric-col">${Number(p.reorder_level).toLocaleString()}</td>
+          </tr>`
+          )
+          .join("");
+      }
+
+      const movementList = document.getElementById("movement-list");
+      const movementItems = Array.isArray(movements?.items) ? movements.items : [];
+      if (movementItems.length === 0) {
+        movementList.innerHTML = '<li class="movement-empty">No stock movements yet.</li>';
+      } else {
+        movementList.innerHTML = movementItems
+          .slice(0, 5)
+          .map((item) => {
+            const typeIsIn = item.type === "IN";
+            const typeLabel = typeIsIn ? "In" : "Out";
+            const direction = typeIsIn ? "+" : "-";
+            return `
+              <li class="movement-item">
+                <div class="movement-head">
+                  <span class="badge badge-${typeIsIn ? "in" : "out"}">${typeLabel}</span>
+                  <strong>${escapeHtml(item.product_name || item.sku || "Product")}</strong>
+                </div>
+                <div class="movement-meta">
+                  <span>${direction}${Number(item.quantity).toLocaleString()} units</span>
+                  <span>${escapeHtml(item.user_name || "System")}</span>
+                </div>
+                <time class="movement-time">${formatDate(item.created_at)}</time>
+              </li>
+            `;
+          })
+          .join("");
+      }
+    } catch (err) {
+      statLoading.classList.add("hidden");
+      statLoading.setAttribute("aria-busy", "false");
+      dashboardErrorMessage.textContent = err.message || "Unable to load the dashboard. Please retry.";
+      dashboardError.classList.remove("hidden");
+      showToast(err.message, "error");
     }
-
-    const movementList = document.getElementById("movement-list");
-    const movementItems = Array.isArray(movements?.items) ? movements.items : [];
-    if (movementItems.length === 0) {
-      movementList.innerHTML = '<li class="movement-empty">No stock movements yet.</li>';
-    } else {
-      movementList.innerHTML = movementItems
-        .slice(0, 5)
-        .map((item) => {
-          const typeIsIn = item.type === "IN";
-          const typeLabel = typeIsIn ? "In" : "Out";
-          const direction = typeIsIn ? "+" : "-";
-          return `
-            <li class="movement-item">
-              <div class="movement-head">
-                <span class="badge badge-${typeIsIn ? "in" : "out"}">${typeLabel}</span>
-                <strong>${escapeHtml(item.product_name || item.sku || "Product")}</strong>
-              </div>
-              <div class="movement-meta">
-                <span>${direction}${Number(item.quantity).toLocaleString()} units</span>
-                <span>${escapeHtml(item.user_name || "System")}</span>
-              </div>
-              <time class="movement-time">${formatDate(item.created_at)}</time>
-            </li>
-          `;
-        })
-        .join("");
-    }
-  } catch (err) {
-    const loading = document.getElementById("stat-loading");
-    if (loading) loading.classList.add("hidden");
-    showToast(err.message, "error");
   }
+
+  retryBtn.addEventListener("click", () => loadDashboard());
+  loadDashboard();
 });

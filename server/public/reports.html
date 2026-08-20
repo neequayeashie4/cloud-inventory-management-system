@@ -6,7 +6,6 @@
   <title>Reports — Cloud Inventory</title>
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/components.css" />
-  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -22,6 +21,11 @@
           <span class="text-muted" id="report-count"></span>
         </div>
 
+        <div id="table-error" class="table-alert hidden" role="alert">
+          <span id="table-error-message"></span>
+          <button type="button" class="btn btn-secondary btn-sm" id="retry-report">Retry</button>
+        </div>
+
         <div class="card">
           <div class="card-body">
             <div class="section-header">
@@ -31,20 +35,23 @@
               <table>
                 <thead>
                   <tr>
-                    <th>SKU</th>
-                    <th>Product</th>
-                    <th>Category</th>
-                    <th>Supplier</th>
-                    <th>Quantity</th>
-                    <th>Unit Price</th>
-                    <th>Stock Value</th>
-                    <th>Status</th>
+                    <th scope="col">SKU</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Supplier</th>
+                    <th scope="col" class="numeric-col">Quantity</th>
+                    <th scope="col" class="numeric-col">Unit Price</th>
+                    <th scope="col" class="numeric-col">Stock Value</th>
+                    <th scope="col">Status</th>
                   </tr>
                 </thead>
                 <tbody id="inventory-body"></tbody>
               </table>
             </div>
-            <div id="empty-state" class="empty-state hidden">No inventory data yet.</div>
+            <div id="empty-state" class="empty-state hidden" aria-live="polite">
+              <strong>No inventory data yet</strong>
+              <span>Add products to see them summarized here.</span>
+            </div>
           </div>
         </div>
       </div>

@@ -6,7 +6,6 @@
   <title>Suppliers — Cloud Inventory</title>
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/components.css" />
-  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -22,6 +21,11 @@
           <button class="btn btn-primary" id="add-btn" type="button">+ Add Supplier</button>
         </div>
 
+        <div id="table-error" class="table-alert hidden" role="alert">
+          <span id="table-error-message"></span>
+          <button type="button" class="btn btn-secondary btn-sm" id="retry-suppliers">Retry</button>
+        </div>
+
         <div class="card">
           <div class="card-body">
             <div class="section-header">
@@ -31,17 +35,20 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Contact Person</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th></th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Contact Person</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col" class="actions-col">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="suppliers-body"></tbody>
               </table>
             </div>
-            <div id="empty-state" class="empty-state hidden">No suppliers yet.</div>
+            <div id="empty-state" class="empty-state hidden" aria-live="polite">
+              <strong>No suppliers yet</strong>
+              <span>Use "+ Add Supplier" above to create your first one.</span>
+            </div>
           </div>
         </div>
       </div>
@@ -52,35 +59,40 @@
     <div class="modal">
       <div class="modal-header">
         <h2 id="modal-title">Add Supplier</h2>
-        <button class="modal-close" id="modal-close">&times;</button>
+        <button class="modal-close" id="modal-close" type="button" aria-label="Close supplier form">&times;</button>
       </div>
       <div class="modal-body">
-        <div id="modal-error" class="alert alert-error hidden"></div>
-        <form id="supplier-form">
+        <div id="modal-error" class="alert alert-error hidden" role="alert"></div>
+        <form id="supplier-form" novalidate>
           <input type="hidden" id="supplier-id" />
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" id="name" required />
+            <input type="text" id="name" required aria-describedby="name-error" />
+            <div class="field-message" id="name-error" aria-live="polite"></div>
           </div>
           <div class="form-group">
             <label for="contact_person">Contact Person</label>
-            <input type="text" id="contact_person" />
+            <input type="text" id="contact_person" aria-describedby="contact_person-error" />
+            <div class="field-message" id="contact_person-error" aria-live="polite"></div>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label for="email">Email</label>
-              <input type="email" id="email" />
+              <input type="email" id="email" aria-describedby="email-error" />
+              <div class="field-message" id="email-error" aria-live="polite"></div>
             </div>
             <div class="form-group">
               <label for="phone">Phone</label>
-              <input type="text" id="phone" />
+              <input type="text" id="phone" aria-describedby="phone-error" />
+              <div class="field-message" id="phone-error" aria-live="polite"></div>
             </div>
           </div>
           <div class="form-group">
             <label for="address">Address</label>
-            <textarea id="address" rows="2"></textarea>
+            <textarea id="address" rows="2" aria-describedby="address-error"></textarea>
+            <div class="field-message" id="address-error" aria-live="polite"></div>
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Save Supplier</button>
+          <button type="submit" class="btn btn-primary btn-block" id="submit-supplier-btn" aria-busy="false">Save Supplier</button>
         </form>
       </div>
     </div>

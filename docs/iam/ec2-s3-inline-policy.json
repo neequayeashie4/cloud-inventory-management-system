@@ -9,7 +9,7 @@
         "s3:GetObject",
         "s3:DeleteObject"
       ],
-      "Resource": "arn:aws:s3:::your-inventory-bucket-name/products/*"
+      "Resource": "arn:aws:s3:::inventory-system-grp-2026/products/*"
     }
   ]
 }

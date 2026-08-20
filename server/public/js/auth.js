@@ -128,6 +128,17 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
+    // Live checklist, not just on-blur — shows the one real backend rule
+    // (8+ characters) updating as the user types, before they've even left
+    // the field.
+    const passwordField = document.getElementById("password");
+    const lengthRequirement = document.getElementById("req-length");
+    if (passwordField && lengthRequirement) {
+      passwordField.addEventListener("input", () => {
+        lengthRequirement.classList.toggle("met", passwordField.value.length >= 8);
+      });
+    }
+
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       clearFieldErrors();

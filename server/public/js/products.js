@@ -133,10 +133,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("quantity").value = product?.quantity ?? 0;
     document.getElementById("reorder_level").value = product?.reorder_level ?? 10;
     modalTitle.textContent = product ? "Edit Product" : "Add Product";
+
+    // Quantity can only be set at creation. Once a product exists, the
+    // server ignores this field on update — changes must go through
+    // Stock In / Stock Out so they're locked and audited.
+    const quantityField = document.getElementById("quantity");
+    const quantityHint = document.getElementById("quantity-hint");
+    quantityField.disabled = Boolean(product);
+    quantityHint.hidden = !product;
+
     backdrop.classList.remove("hidden");
+    activateModal(backdrop);
   }
 
   function closeModal() {
+    deactivateModal(backdrop);
     backdrop.classList.add("hidden");
     clearFormErrors();
     form.reset();

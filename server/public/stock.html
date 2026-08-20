@@ -6,7 +6,6 @@
   <title>Stock — Cloud Inventory</title>
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/components.css" />
-  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -55,7 +54,7 @@
                 <label for="note">Note</label>
                 <textarea id="note" rows="2"></textarea>
               </div>
-              <button type="submit" class="btn btn-primary">Record Movement</button>
+              <button type="submit" class="btn btn-primary" id="submit-movement-btn" aria-busy="false">Record Movement</button>
             </form>
           </div>
         </div>
@@ -79,6 +78,11 @@
           </div>
         </div>
 
+        <div id="table-error" class="table-alert hidden" role="alert">
+          <span id="table-error-message"></span>
+          <button type="button" class="btn btn-secondary btn-sm" id="retry-movements">Retry</button>
+        </div>
+
         <div class="card">
           <div class="card-body">
             <div class="section-header">
@@ -88,18 +92,21 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Date</th>
-                    <th>Product</th>
-                    <th>Type</th>
-                    <th>Quantity</th>
-                    <th>Reference</th>
-                    <th>Recorded By</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Type</th>
+                    <th scope="col" class="numeric-col">Quantity</th>
+                    <th scope="col">Reference</th>
+                    <th scope="col">Recorded By</th>
                   </tr>
                 </thead>
                 <tbody id="movements-body"></tbody>
               </table>
             </div>
-            <div id="empty-state" class="empty-state hidden">No stock movements found.</div>
+            <div id="empty-state" class="empty-state hidden" aria-live="polite">
+              <strong>No stock movements found</strong>
+              <span>Record a stock in or out above, or adjust the date filters.</span>
+            </div>
           </div>
         </div>
       </div>

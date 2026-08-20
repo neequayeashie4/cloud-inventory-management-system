@@ -24,6 +24,7 @@ Every response uses one of these two shapes.
 | POST | `/auth/register` | none | — | Always creates a `viewer` account |
 | POST | `/auth/login` | none | — | Rate limited: 5 attempts / 15 min / IP |
 | GET | `/auth/me` | required | any | Returns the current user |
+| POST | `/auth/users` | required | admin | Creates an account with an explicit role (`admin`/`staff`/`viewer`) — the only path to a non-viewer account besides seeding |
 
 ## Products
 

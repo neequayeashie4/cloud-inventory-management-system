@@ -1,5 +1,5 @@
 const express = require("express");
-const { body } = require("express-validator");
+const { body, query } = require("express-validator");
 const auth = require("../middleware/auth");
 const authorize = require("../middleware/authorize");
 const validate = require("../middleware/validate");
@@ -18,7 +18,14 @@ const productRules = [
   body("supplier_id").optional({ checkFalsy: true }).isInt().withMessage("Invalid supplier"),
 ];
 
-router.get("/", auth, controller.list);
+const listRules = [
+  query("search").optional().isString().trim().isLength({ max: 150 }).withMessage("Search term is too long"),
+  query("category").optional({ checkFalsy: true }).isInt().withMessage("Invalid category"),
+  query("page").optional().isInt({ min: 1 }).withMessage("Page must be a positive integer"),
+  query("limit").optional().isInt({ min: 1, max: 100 }).withMessage("Limit must be between 1 and 100"),
+];
+
+router.get("/", auth, listRules, validate, controller.list);
 router.get("/:id", auth, controller.getById);
 router.post(
   "/",

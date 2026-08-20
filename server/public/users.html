@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Users — Cloud Inventory</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar-mount"></aside>
+
+    <main class="main-content">
+      <div class="page-shell">
+        <div class="page-header">
+          <div>
+            <p class="eyebrow">Administration</p>
+            <h1>Users</h1>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="section-header">
+              <h2>Create user</h2>
+              <p class="form-helper">
+                New accounts made here can be given the <strong>admin</strong> or <strong>staff</strong> role
+                directly. Anyone who registers themselves from the login page always starts as
+                <strong>viewer</strong>.
+              </p>
+            </div>
+
+            <div id="form-error" class="alert alert-error hidden"></div>
+            <div id="form-success" class="alert alert-success hidden"></div>
+
+            <form id="create-user-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">Full name</label>
+                  <input type="text" id="name" required aria-describedby="name-error" />
+                  <div class="field-message" id="name-error" aria-live="polite"></div>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" required aria-describedby="email-error" />
+                  <div class="field-message" id="email-error" aria-live="polite"></div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="password">Temporary password</label>
+                  <input type="password" id="password" minlength="8" required aria-describedby="password-error" />
+                  <div class="field-message" id="password-error" aria-live="polite"></div>
+                </div>
+                <div class="form-group">
+                  <label for="role">Role</label>
+                  <select id="role" required>
+                    <option value="staff">Staff</option>
+                    <option value="admin">Admin</option>
+                    <option value="viewer">Viewer</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" id="submit-btn">Create User</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/users.js"></script>
+</body>
+</html>

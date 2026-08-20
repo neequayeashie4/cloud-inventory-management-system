@@ -92,3 +92,32 @@ function formatDate(value) {
   if (!value) return "-";
   return new Date(value).toLocaleString();
 }
+
+// Shared modal accessibility: call activateModal(backdrop) right after
+// showing a modal, and deactivateModal(backdrop) right before hiding it.
+// Moves focus into the modal, returns it to whatever triggered the modal
+// on close, and lets Escape close it (by clicking the modal's own
+// .modal-close button, so each page's existing close logic still runs).
+function activateModal(backdrop) {
+  backdrop._triggerElement = document.activeElement;
+
+  const focusTarget = backdrop.querySelector("input, select, textarea, button, [tabindex]");
+  if (focusTarget) focusTarget.focus();
+
+  backdrop._escapeHandler = (e) => {
+    if (e.key === "Escape") {
+      backdrop.querySelector(".modal-close")?.click();
+    }
+  };
+  document.addEventListener("keydown", backdrop._escapeHandler);
+}
+
+function deactivateModal(backdrop) {
+  if (backdrop._escapeHandler) {
+    document.removeEventListener("keydown", backdrop._escapeHandler);
+    backdrop._escapeHandler = null;
+  }
+  if (backdrop._triggerElement && document.body.contains(backdrop._triggerElement)) {
+    backdrop._triggerElement.focus();
+  }
+}
