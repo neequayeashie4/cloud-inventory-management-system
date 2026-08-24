@@ -21,17 +21,18 @@ app.set("trust proxy", 1); // behind nginx
 
 const s3Origin = `https://${env.aws.s3Bucket}.s3.${env.aws.region}.amazonaws.com`;
 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        "img-src": ["'self'", "data:", s3Origin],
-        upgradeInsecureRequests: null,
-      },
-    },
-  })
-);
+const cspDirectives = {
+  ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+  "img-src": ["'self'", "data:", s3Origin],
+};
+
+delete cspDirectives["upgrade-insecure-requests"];
+delete cspDirectives.upgradeInsecureRequests;
+
+app.use(helmet({
+  contentSecurityPolicy: { directives: cspDirectives },
+}));
+
 app.use(cors()); // same-origin in production; harmless to leave enabled
 app.use(compression());
 app.use(express.json());
