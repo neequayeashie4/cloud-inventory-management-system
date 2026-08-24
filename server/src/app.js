@@ -27,6 +27,7 @@ app.use(
       directives: {
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
         "img-src": ["'self'", "data:", s3Origin],
+        upgradeInsecureRequests: null,
       },
     },
   })
